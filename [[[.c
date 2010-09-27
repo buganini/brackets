@@ -143,7 +143,7 @@ int main(int argc, char *argv[]){
 #ifdef DEBUG
 			printf("END\n");
 #endif
-			if(cmd->len==1){
+			if(cmd->mode!=CMD && cmd->len==1){
 #ifdef DEBUG
 				printf("PROMOTE\n");
 #endif
@@ -183,7 +183,7 @@ int main(int argc, char *argv[]){
 	printf("FINALIZING\n");
 #endif
 	while(cmd->parent){
-		if(cmd->len==1){
+		if(cmd->mode!=CMD && cmd->len==1){
 #ifdef DEBUG
 			printf("PROMOTE\n");
 #endif
