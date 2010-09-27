@@ -127,7 +127,7 @@ int main(int argc, char *argv[]){
 			cmd=leave;
 			continue;
 		}
-		if(end[cmd->opcode] && strcmp(end[cmd->opcode],argv[i])==0){
+		if(strcmp(end[cmd->opcode],argv[i])==0){
 #ifdef DEBUG
 			printf("END\n");
 #endif
