@@ -20,6 +20,7 @@ struct node {
 
 int walk(struct node *cmd){
 	char **argv;
+	struct node *p;
 	int i;
 	int pid[cmd->len];
 	if(cmd->mode==CMD){
@@ -38,7 +39,9 @@ int walk(struct node *cmd){
 		}
 		for(i=0;i<cmd->len;++i){
 			waitpid(pid[i],NULL,0);
-			free(cmd->ptr[i]);
+			p=cmd->ptr[i];
+			free(p->ptr);
+			free(p);
 		}
 		return 0;
 	}
@@ -51,7 +54,9 @@ int walk(struct node *cmd){
 				return walk(cmd->ptr[i]);
 			}
 			waitpid(pid[i],NULL,0);
-			free(cmd->ptr[i]);
+			p=cmd->ptr[i];
+			free(p->ptr);
+			free(p);
 		}
 		return 0;
 	}
@@ -169,7 +174,7 @@ int main(int argc, char *argv[]){
 #ifdef DEBUG
 	printf("FINALIZING\n");
 #endif
-	while(cmd){
+	while(cmd->parent){
 		if(cmd->len==1){
 #ifdef DEBUG
 			printf("PROMOTE\n");
@@ -184,6 +189,7 @@ int main(int argc, char *argv[]){
 		cmd=cmd->parent;
 	}
 	i=walk(nexus);
+	free(nexus->ptr);
 	free(nexus);
 	return i;
 }
