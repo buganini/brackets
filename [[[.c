@@ -132,7 +132,10 @@ int main(int argc, char *argv[]){
 			printf("END\n");
 #endif
 			if(cmd->len==1){
-				leave=cmd->ptr[1];
+#ifdef DEBUG
+				printf("PROMOTE\n");
+#endif
+				leave=cmd->ptr[0];
 				cmd->mode=leave->mode;
 				free(cmd->ptr);
 				cmd->ptr=leave->ptr;

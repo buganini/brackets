@@ -1,5 +1,5 @@
 all:
-	$(CC) [[[.c -g -o [[[
+	$(CC) [[[.c -g -o [[[ -DDEBUG
 install:
 	cp [[[ /usr/local/bin
 	ln -fs [[[ /usr/local/bin/[[
