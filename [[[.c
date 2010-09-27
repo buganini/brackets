@@ -33,7 +33,7 @@ int walk(struct node *cmd){
 			if(pid[i]<0)
 				return 1;
 			if(pid[i]==0){
-				return walk(cmd->ptr[i]);
+				exit(walk(cmd->ptr[i]));
 			}
 			
 		}
@@ -51,7 +51,7 @@ int walk(struct node *cmd){
 			if(pid[i]<0)
 				return 1;
 			if(pid[i]==0){
-				return walk(cmd->ptr[i]);
+				exit(walk(cmd->ptr[i]));
 			}
 			waitpid(pid[i],NULL,0);
 			p=cmd->ptr[i];
@@ -146,6 +146,7 @@ int main(int argc, char *argv[]){
 				cmd->ptr=leave->ptr;
 				cmd->size=leave->size;
 				cmd->len=leave->len;
+				free(leave);
 			}
 			cmd=cmd->parent;
 			continue;
@@ -185,6 +186,7 @@ int main(int argc, char *argv[]){
 			cmd->ptr=leave->ptr;
 			cmd->size=leave->size;
 			cmd->len=leave->len;
+			free(leave);
 		}
 		cmd=cmd->parent;
 	}
