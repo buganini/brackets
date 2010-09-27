@@ -166,6 +166,23 @@ int main(int argc, char *argv[]){
 		cmd->len+=1;
 		cmd->ptr[cmd->len]=NULL;
 	}
+#ifdef DEBUG
+	printf("FINALIZING\n");
+#endif
+	while(cmd){
+		if(cmd->len==1){
+#ifdef DEBUG
+			printf("PROMOTE\n");
+#endif
+			leave=cmd->ptr[0];
+			cmd->mode=leave->mode;
+			free(cmd->ptr);
+			cmd->ptr=leave->ptr;
+			cmd->size=leave->size;
+			cmd->len=leave->len;
+		}
+		cmd=cmd->parent;
+	}
 	i=walk(nexus);
 	free(nexus);
 	return i;
