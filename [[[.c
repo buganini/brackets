@@ -18,11 +18,15 @@ struct node {
 	int size;
 };
 
-int fwalk(struct node *cmd){
+struct node *nexus;
+
+int fwalk(struct node *cmd, void *excl){
 	int i;
+	if(cmd==NULL) return;
+	if(cmd->ptr==excl) return;
 	if(cmd->mode!=CMD){
 		for(i=0;i<cmd->len;++i){
-			fwalk(cmd->ptr[i]);
+			fwalk(cmd->ptr[i], excl);
 		}
 	}
 	free(cmd->ptr);
@@ -36,7 +40,8 @@ int walk(struct node *cmd){
 	int pid[cmd->len];
 	if(cmd->mode==CMD){
 		argv=(char **)cmd->ptr;
-		return -execvp(argv[0],argv);
+		fwalk(nexus, argv);
+		return -execvp(argv[0], argv);
 	}
 	if(cmd->mode==PRL){
 		for(i=0;i<cmd->len;++i){
@@ -49,8 +54,9 @@ int walk(struct node *cmd){
 			
 		}
 		for(i=0;i<cmd->len;++i){
-			waitpid(pid[i],NULL,0);
-			p=cmd->ptr[i];
+			waitpid(pid[i], NULL, 0);
+			fwalk(cmd->ptr[i], NULL);
+			cmd->ptr[i]=NULL;
 		}
 		return 0;
 	}
@@ -62,8 +68,9 @@ int walk(struct node *cmd){
 			if(pid[i]==0){
 				return walk(cmd->ptr[i]);
 			}
-			waitpid(pid[i],NULL,0);
-			p=cmd->ptr[i];
+			waitpid(pid[i], NULL, 0);
+			fwalk(cmd->ptr[i], NULL);
+			cmd->ptr[i]=NULL;
 		}
 		return 0;
 	}
@@ -71,9 +78,9 @@ int walk(struct node *cmd){
 
 int main(int argc, char *argv[]){
 	int i;
-	char *end[]={NULL,"]]]","]]"};
+	char *end[]={NULL, "]]]", "]]"};
 	void *p;
-	struct node *nexus=malloc(sizeof(struct node));
+	nexus=malloc(sizeof(struct node));
 	struct node *cmd=nexus;
 	struct node *leave;
 	cmd->opcode=cmd->mode=SEQ;
@@ -86,7 +93,7 @@ int main(int argc, char *argv[]){
 #ifdef DEBUG
 		printf("[%d] %s: ", i, argv[i]);
 #endif
-		if(strcmp("[[",argv[i])==0){
+		if(strcmp("[[", argv[i])==0){
 #ifdef DEBUG
 			printf("SEQ\n");
 #endif
@@ -113,7 +120,7 @@ int main(int argc, char *argv[]){
 
 			continue;
 		}
-		if(strcmp("[[[",argv[i])==0){
+		if(strcmp("[[[", argv[i])==0){
 #ifdef DEBUG
 			printf("PRL\n");
 #endif
@@ -139,7 +146,7 @@ int main(int argc, char *argv[]){
 			cmd=leave;
 			continue;
 		}
-		if(strcmp(end[cmd->opcode],argv[i])==0){
+		if(strcmp(end[cmd->opcode], argv[i])==0){
 #ifdef DEBUG
 			printf("END\n");
 #endif
@@ -182,7 +189,7 @@ int main(int argc, char *argv[]){
 #ifdef DEBUG
 	printf("FINALIZING\n");
 #endif
-	while(cmd->parent){
+	while(cmd){
 		if(cmd->mode!=CMD && cmd->len==1){
 #ifdef DEBUG
 			printf("PROMOTE\n");
@@ -198,6 +205,6 @@ int main(int argc, char *argv[]){
 		cmd=cmd->parent;
 	}
 	i=walk(nexus);
-	fwalk(nexus);
+	fwalk(nexus, NULL);
 	return i;
 }
