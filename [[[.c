@@ -23,13 +23,14 @@ struct node *nexus;
 int fwalk(struct node *cmd, void *excl){
 	int i;
 	if(cmd==NULL) return;
-	if(cmd->ptr==excl) return;
-	if(cmd->mode!=CMD){
-		for(i=0;i<cmd->len;++i){
-			fwalk(cmd->ptr[i], excl);
+	if(cmd->ptr!=excl){
+		if(cmd->mode!=CMD){
+			for(i=0;i<cmd->len;++i){
+				fwalk(cmd->ptr[i], excl);
+			}
 		}
+		free(cmd->ptr);
 	}
-	free(cmd->ptr);
 	free(cmd);
 }
 
