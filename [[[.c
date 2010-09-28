@@ -1,7 +1,9 @@
+#include <sys/types.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
+#include <sys/wait.h>
 
 #define CMD 0
 #define PRL 1
@@ -20,7 +22,7 @@ struct node {
 
 struct node *nexus;
 
-int fwalk(struct node *cmd, void *excl){
+void fwalk(struct node *cmd, void *excl){
 	int i;
 	if(cmd==NULL) return;
 	if(cmd->ptr!=excl){
@@ -36,7 +38,6 @@ int fwalk(struct node *cmd, void *excl){
 
 int walk(struct node *cmd){
 	char **argv;
-	struct node *p;
 	int i;
 	int pid[cmd->len];
 	if(cmd->mode==CMD){
@@ -75,6 +76,7 @@ int walk(struct node *cmd){
 		}
 		return 0;
 	}
+	return 1;
 }
 
 int main(int argc, char *argv[]){
