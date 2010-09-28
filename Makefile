@@ -13,4 +13,5 @@ test:
 		]]] \
 		[[ echo e ]] \
 	]]
-
+benchmark:
+	for i in `jot 100`; do make test; done
