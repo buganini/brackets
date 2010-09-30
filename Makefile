@@ -1,5 +1,5 @@
 all:
-	$(CC) [[[.c -g -o [[[
+	$(CC) [[[.c -o [[[ -Wall
 install:
 	cp [[[ /usr/local/bin
 	ln -fs [[[ /usr/local/bin/[[
