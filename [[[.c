@@ -38,27 +38,27 @@ struct node {
 
 struct node *nexus;
 
-void fwalk(struct node *cmd, void *excl){
+void fwalk(struct node *cmd){
 	int i;
 	if(cmd==NULL) return;
-	if(cmd->ptr!=excl){
-		if(cmd->mode!=CMD){
-			for(i=0;i<cmd->len;++i){
-				fwalk(cmd->ptr[i], excl);
-			}
+	if(cmd->mode!=CMD){
+		for(i=0;i<cmd->len;++i){
+			fwalk(cmd->ptr[i]);
 		}
-		free(cmd->ptr);
 	}
+	free(cmd->ptr);
 	free(cmd);
 }
 
 int walk(struct node *cmd){
-	char **argv;
 	int i;
 	int pid[cmd->len];
 	if(cmd->mode==CMD){
-		argv=(char **)cmd->ptr;
-		fwalk(nexus, argv);
+		char *argv[cmd->len+1];
+		for(i=0;i<=cmd->len;++i){
+			argv[i]=cmd->ptr[i];
+		}
+		fwalk(nexus);
 		return -execvp(argv[0], argv);
 	}
 	if(cmd->mode==PRL){
@@ -73,7 +73,7 @@ int walk(struct node *cmd){
 		}
 		for(i=0;i<cmd->len;++i){
 			waitpid(pid[i], NULL, 0);
-			fwalk(cmd->ptr[i], NULL);
+			fwalk(cmd->ptr[i]);
 			cmd->ptr[i]=NULL;
 		}
 		return 0;
@@ -87,7 +87,7 @@ int walk(struct node *cmd){
 				return walk(cmd->ptr[i]);
 			}
 			waitpid(pid[i], NULL, 0);
-			fwalk(cmd->ptr[i], NULL);
+			fwalk(cmd->ptr[i]);
 			cmd->ptr[i]=NULL;
 		}
 		return 0;
@@ -224,6 +224,6 @@ int main(int argc, char *argv[]){
 		cmd=cmd->parent;
 	}
 	i=walk(nexus);
-	fwalk(nexus, NULL);
+	fwalk(nexus);
 	return i;
 }
