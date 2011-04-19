@@ -1,8 +1,10 @@
+PREFIX?=/usr/local
+
 all:
 	$(CC) [[[.c -o [[[ -Wall
 install:
-	cp [[[ /usr/local/bin
-	ln -fs [[[ /usr/local/bin/[[
+	install -s -m 555 [[[ ${PREFIX}/bin
+	ln -fs [[[ ${PREFIX}/bin/[[
 test:
 	[[ \
 		[[ echo a ]] \
