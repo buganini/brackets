@@ -98,7 +98,6 @@ int walk(struct node *cmd){
 int main(int argc, char *argv[]){
 	int i;
 	char *end[]={NULL, "]]]", "]]"};
-	void *p;
 	nexus=malloc(sizeof(struct node));
 	struct node *cmd=nexus;
 	struct node *leave;
@@ -122,11 +121,8 @@ int main(int argc, char *argv[]){
 			}
 			if(cmd->size<=cmd->len){
 				cmd->size+=INC_SIZE;
-				p=realloc(cmd->ptr, cmd->size * sizeof(void *));
-				if(p!=cmd->ptr){
-					free(cmd->ptr);
-					cmd->ptr=p;
-				}
+				cmd->ptr=realloc(cmd->ptr, cmd->size * sizeof(void *));
+				//XXX if(cmd->ptr==NULL) ...
 			}
 			leave=cmd->ptr[cmd->len]=malloc(sizeof(struct node));
 			cmd->len+=1;
@@ -149,11 +145,8 @@ int main(int argc, char *argv[]){
 			}
 			if(cmd->size<=cmd->len){
 				cmd->size+=INC_SIZE;
-				p=realloc(cmd->ptr, cmd->size * sizeof(void *));
-				if(p!=cmd->ptr){
-					free(cmd->ptr);
-					cmd->ptr=p;
-				}
+				cmd->ptr=realloc(cmd->ptr, cmd->size * sizeof(void *));
+				//XXX if(cmd->ptr==NULL) ...
 			}
 			leave=cmd->ptr[cmd->len]=malloc(sizeof(struct node));
 			cmd->len+=1;
@@ -195,11 +188,8 @@ int main(int argc, char *argv[]){
 		}
 		if(cmd->size<=cmd->len+1){
 			cmd->size+=INC_SIZE;
-			p=realloc(cmd->ptr, cmd->size * sizeof(void *));
-			if(p!=cmd->ptr){
-				free(cmd->ptr);
-				cmd->ptr=p;
-			}
+			cmd->ptr=realloc(cmd->ptr, cmd->size * sizeof(void *));
+			//XXX if(cmd->ptr==NULL) ...
 		}
 		cmd->ptr[cmd->len]=argv[i];
 		cmd->len+=1;
