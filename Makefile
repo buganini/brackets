@@ -2,9 +2,14 @@ PREFIX?=/usr/local
 
 all:
 	$(CC) -Wall [[[.c -o [[[ -Wall
+
 install:
 	install -s -m 555 [[[ ${PREFIX}/bin
 	ln -fs [[[ ${PREFIX}/bin/[[
+
+clean:
+	rm [[[
+
 test:
 	[[ \
 		[[ echo a ]] \
@@ -15,5 +20,6 @@ test:
 		]]] \
 		[[ echo e ]] \
 	]]
+
 benchmark:
 	for i in `jot 100`; do make test; done
