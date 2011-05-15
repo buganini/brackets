@@ -58,7 +58,7 @@ int walk(struct node *cmd){
 	int pid[cmd->len];
 	if(cmd->mode==CMD){
 		char *argv[cmd->len+eargc+1];
-		for(i=0;i<=cmd->len;++i){
+		for(i=0;i<cmd->len;++i){
 			argv[i]=cmd->ptr[i];
 		}
 		for(i=0;i<=eargc;++i){
@@ -195,14 +195,13 @@ int main(int argc, char *argv[]){
 			fprintf(stderr, "Unexpected command at argv[%d]: %s.\n", i, argv[i]);
 			return 1;
 		}
-		if(cmd->size<=cmd->len+1){
+		if(cmd->size<=cmd->len){
 			cmd->size+=INC_SIZE;
 			cmd->ptr=realloc(cmd->ptr, cmd->size * sizeof(void *));
 			//XXX if(cmd->ptr==NULL) ...
 		}
 		cmd->ptr[cmd->len]=argv[i];
 		cmd->len+=1;
-		cmd->ptr[cmd->len]=NULL;
 	}
 #ifdef DEBUG
 	printf("FINALIZING\n");
