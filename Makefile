@@ -1,7 +1,7 @@
 PREFIX?=/usr/local
 
 all:
-	$(CC) [[[.c -o [[[ -Wall
+	$(CC) -Wall [[[.c -o [[[ -Wall
 install:
 	install -s -m 555 [[[ ${PREFIX}/bin
 	ln -fs [[[ ${PREFIX}/bin/[[
