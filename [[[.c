@@ -37,6 +37,9 @@ struct node {
 };
 
 struct node *nexus;
+char **eargv;
+int eargc=0;
+int eargs;
 
 void fwalk(struct node *cmd){
 	int i;
@@ -54,11 +57,15 @@ int walk(struct node *cmd){
 	int i;
 	int pid[cmd->len];
 	if(cmd->mode==CMD){
-		char *argv[cmd->len+1];
+		char *argv[cmd->len+eargc+1];
 		for(i=0;i<=cmd->len;++i){
 			argv[i]=cmd->ptr[i];
 		}
+		for(i=0;i<=eargc;++i){
+			argv[cmd->len+i]=eargv[i];
+		}
 		fwalk(nexus);
+		free(eargv);
 		return -execvp(argv[0], argv);
 	}
 	if(cmd->mode==PRL){
@@ -98,6 +105,8 @@ int walk(struct node *cmd){
 int main(int argc, char *argv[]){
 	int i;
 	char *end[]={NULL, "]]]", "]]"};
+	char buf[64];
+	char *arg;
 	nexus=malloc(sizeof(struct node));
 	struct node *cmd=nexus;
 	struct node *leave;
@@ -213,7 +222,26 @@ int main(int argc, char *argv[]){
 		}
 		cmd=cmd->parent;
 	}
+	eargs=INC_SIZE;
+	eargv=malloc(sizeof(char *)*eargs);
+	eargv[0]=NULL;
+	for(i=0;;++i){
+		sprintf(buf,"ARG%d",i);
+		arg=getenv(buf);
+		if(arg!=NULL){
+			if(eargs<=eargc+1){
+				eargs+=INC_SIZE;
+				eargv=realloc(eargv, sizeof(char *)*eargs);
+			}
+			eargv[eargc]=arg;
+			eargc+=1;
+			eargv[eargc]=NULL;
+			continue;
+		}
+		break;
+	}
 	i=walk(nexus);
 	fwalk(nexus);
+	free(eargv);
 	return i;
 }
