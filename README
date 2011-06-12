@@ -4,3 +4,16 @@ This program could has two names: [[ [[[
 both of them are also used as command quote.
 
 SEE Makefile
+
+sh script equivalent for simple case:
+	#!/bin/sh
+	unset pids
+	cmds="1 2 3 4"
+	for cmd in $cmds; do
+	echo ${cmd} &
+	pids="$pids $!"
+	done
+	pwait $pids
+
+	(but what if process terminates and another process with same pid is executed before pwait?
+	though pid is not likely to collide.)
