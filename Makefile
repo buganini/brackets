@@ -11,7 +11,7 @@ clean:
 	rm [[[
 
 test:
-	[[ \
+	env ARG0=extra [[ \
 		[[ echo a ]] \
 		[[[ \
 			[[ echo b ]] \
