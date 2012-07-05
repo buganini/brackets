@@ -5,6 +5,8 @@ both of them are also used as command quote.
 
 SEE Makefile
 
+if [[ and/or [[[ is used by shell builtin command, use `brackets` as argv[0]
+
 sh script equivalent for simple case:
 	#!/bin/sh
 	unset pids

@@ -103,7 +103,7 @@ int walk(struct node *cmd){
 }
 
 int main(int argc, char *argv[]){
-	int i;
+	int i=1;
 	char *end[]={NULL, "]]]", "]]"};
 	char buf[64];
 	char *arg;
@@ -115,8 +115,11 @@ int main(int argc, char *argv[]){
 	cmd->ptr=NULL;
 	cmd->size=0;
 	cmd->len=0;
-	
-	for(i=0;i<argc;++i){
+
+	if(strcmp(argv[0],"[[")==0 || strcmp(argv[0],"[[[")==0)
+		i=0;
+
+	for(;i<argc;++i){
 #ifdef DEBUG
 		printf("[%d] %s: ", i, argv[i]);
 #endif

@@ -1,17 +1,19 @@
 PREFIX?=/usr/local
 
 all:
-	$(CC) -Wall [[[.c -o [[[ -Wall
+	$(CC) -Wall brackets.c -o brackets -Wall
 
 install:
-	install -s -m 555 [[[ ${PREFIX}/bin
-	ln -fs [[[ ${PREFIX}/bin/[[
+	install -s -m 555 brackets ${PREFIX}/bin
+	ln -fs brackets ${PREFIX}/bin/[[
+	ln -fs brackets ${PREFIX}/bin/[[[
 
 clean:
-	rm [[[
+	rm -f [[[ [[ brackets
 
 test:
-	env ARG0=extra [[ \
+	env ARG0=extra \
+	[[ \
 		[[ echo a ]] \
 		[[[ \
 			[[ echo b ]] \
